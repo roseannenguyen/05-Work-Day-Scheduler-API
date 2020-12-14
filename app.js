@@ -1,77 +1,72 @@
-var keys = [];
-
-for (var i = 9; i < 18; i++) {
-keys.push(`${i}-input`)
-}
-
-$(document).ready(function writeTask(taskHour, taskText) {
-    
-    $("#currentDay").text(moment().format("MMMM Do YYYY, h:mm:ss a"))
+$("#currentDay").text(moment().format("MMMM Do YYYY, h:mm a"))
 
 
-    $(".saveBtn").on("click", function(event) {
+$(document).ready(function () {
 
-        var taskText = $(this).prev().val()
-        var taskHour = $(this).prev().attr("id") 
-    
-        writeTask(taskHour, taskText)
-    
+    $(".saveBtn").on("click", function() {
+
+        var taskText = $(this).siblings(".textarea").val();
+        var taskHour = $(this).siblings(".textarea").attr("id");
+        
         localStorage.setItem(taskText, taskHour);
-    
+       
+
     })
+
+
+    $("#hour-9 .textarea").val(localStorage.getItem("hour-9"));
+    $("#hour-10 .textarea").val(localStorage.getItem("hour-10"));
+    $("#hour-11 .textarea").val(localStorage.getItem("hour-11"));
+    $("#hour-12 .textarea").val(localStorage.getItem("hour-12"));
+    $("#hour-1 .textarea").val(localStorage.getItem("hour-1"));
+    $("#hour-2 .textarea").val(localStorage.getItem("hour-2"));
+    $("#hour-3 .textarea").val(localStorage.getItem("hour-3"));
+    $("#hour-4 .textarea").val(localStorage.getItem("hour-4"));
+    $("#hour-5 .textarea").val(localStorage.getItem("hour-5"));
+    $("#hour-6 .textarea").val(localStorage.getItem("hour-6"));
+    $("#hour-7 .textarea").val(localStorage.getItem("hour-7"));
+
+    var currentHour = moment().hour();
+    
+    function currentTime() {
+
+      
+
+        $(".time-block").each(function () {
+            var blockTime = $(this).attr("id");
+            var blockHour = parseInt(blockTime)
+            // console.log(blockTime, currentHour)
+
+            if (blockHour < currentHour) {
+                $(this).addClass("past");
+               
+                
+            }
+            else if (blockHour === currentHour) {
+                $(this).addClass("present");
+            
+                
+
+            }
+            else {
+                $(this).addClass("future");
+             
+                
+
+            }
+
+
+        })
+
+    }
+ 
+
+    currentTime();
+    renderStoredInputs()
+
 
 })
 
 
 
-function readTasks() {
-    var tasks = []
-    for (i =0; i < keys.length;i++) {
-        var task = localStorage.getItem(keys[i])
-        tasks.push(task)
-    }
-    return tasks
-
-}
-
-function fillTasks(tasks) {
-    for (var i=0; i < tasks.length; i++) {
-        var el = keys[i]
-        var text = tasks[i]
-        // write it to DOM
-        
-    }
-}
-
-function currentTime() {
-    var currentHour = moment().hour();
-
-    $(".time-block").each(function() {
-        var blockTime = parseInt($(this),attr("id").split("hour")[1]);
-        console.log(blockTime, currentHour)
-
-        if (blockTime < currentHour) {
-            $(this).addClass("past")
-            $(this).removeClass("future")
-            $(this).removeClass("present")
-        }
-        else if (blockTime === currentHour) {
-            $(this).addClass("present")
-            $(this).remoevClass("future")
-            $(this).removeClass("past")
-        }
-        else {
-            $(this).addClass("future")
-            $(this).removeClass("past")
-            $(this).removeClass("present")
-        }
-
-
-    })
-    currentTime();
-}
-
-
-var tasks = readTasks();
-fillTasks(tasks)
 
