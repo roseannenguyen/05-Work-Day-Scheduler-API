@@ -1,49 +1,21 @@
-
-
-$("#currentDay").text(moment().format("MMMM Do YYYY, h:mm a"))
-
-
 $(document).ready(function () {
 
+    var keys = [];
+    
+    $("#currentDay").text(moment().format("MMMM Do YYYY, h:mm a"));
 
-    $(".saveBtn").on("click", function (event) {
-        event.preventDefault()
+
+    $(".saveBtn").on("click", function () {
+        
 
         var taskText = $(this).prev(".textarea").val().trim();
         var taskHour = $(this).prev().attr("id");
 
-        // console.log(document.querySelectorAll (".textarea"))
+        var savedDate = moment().format("dddd, MMMM Do");
+        keys.push({textarea: taskText, time: taskHour, date: savedDate});
+        localStorage.setItem("keys", JSON.stringify(keys));
 
-        localStorage.setItem(taskText, taskHour)
-
- 
-
-
-        // savedData = JSON.parse(localStorage.getItem(taskText))
-
-
-
-
-        // saveText();
-        // storedData();
-
-    })
-
-    // function saveText() {
-    //     var storedText = JSON.parse(localStorage.getItem("taskText"))
-
-    //     if (storedText !== null) {
-    //         taskText = storedText;
-    //     }
-    // }
-
-    // function storedData() {
-    //     localStorage.setItem("taskText", JSON.stringify(taskText));
-    // }
-
-
-
-
+    });
 
     function currentTime() {
 
@@ -51,22 +23,26 @@ $(document).ready(function () {
 
         $(".time-block").each(function () {
 
-            var blockTime = parseInt($(this).attr("id").split("-")[1]);
+            var blockTime = this.id
 
 
             if (blockTime < currentHour) {
-                $(this).find("textarea").addClass("past");
+                $(this).find(".textarea").addClass("past");
 
 
             }
             else if (blockTime === currentHour) {
-                $(this).find("textarea").addClass("present");
+                $(this).find(".textarea").removeClass("past");
+                $(this).find(".textarea").addClass("present");
 
 
 
             }
             else {
-                $(this).find("textarea").addClass("future");
+                $(this).find(".textarea").addClass("future");
+                $(this).find(".textarea").removeClass("past");
+                $(this).find(".textarea").removeClass("present");
+                
 
 
 
@@ -75,6 +51,17 @@ $(document).ready(function () {
     }
 
     currentTime();
+
+    var storedData = JSON.parse(localStorage.getItem("keys"));
+
+    if (storedData !== null) {
+      keys = storedData;
+    }
+  
+    for(var i = 0; i < keys.length; i++) {
+      var userInput = keys[i].textarea;
+      $("#" + keys[i].taskHour).children("textarea").text(userInput);
+    }
 
 })
 
